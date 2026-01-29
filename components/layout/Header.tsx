@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Settings, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AccessibilityMenu } from "@/components/features/accessibility/AccessibilityMenu";
+import { MobileMenu } from "@/components/layout/MobileMenu";
 
 export function Header() {
     return (
@@ -29,12 +31,8 @@ export function Header() {
                 </nav>
 
                 <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" aria-label="Ajustes de acessibilidade">
-                        <Settings className="h-5 w-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="md:hidden" aria-label="Menu principal">
-                        <Menu className="h-5 w-5" />
-                    </Button>
+                    <AccessibilityMenu />
+                    <MobileMenu />
                 </div>
             </div>
         </header>

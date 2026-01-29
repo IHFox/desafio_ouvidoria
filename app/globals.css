@@ -54,15 +54,15 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  
+
   /* Azul GDF */
   --primary: #0066cc;
   --primary-foreground: #ffffff;
-  
+
   /* Verde GDF */
   --secondary: #00a859;
   --secondary-foreground: #ffffff;
-  
+
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
@@ -71,7 +71,7 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: #0066cc;
-  
+
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -94,15 +94,15 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  
+
   /* Azul GDF Claro para Dark Mode */
   --primary: #3399ff;
   --primary-foreground: #000000;
-  
+
   /* Verde GDF Claro para Dark Mode */
   --secondary: #00e676;
   --secondary-foreground: #000000;
-  
+
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
@@ -111,7 +111,7 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: #3399ff;
-  
+
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -131,7 +131,49 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Alto Contraste */
+.high-contrast {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 0%;
+  --card-foreground: 0 0% 100%;
+  --popover: 0 0% 0%;
+  --popover-foreground: 0 0% 100%;
+  --primary: 60 100% 50%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 0 0% 100%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 0 0% 20%;
+  --muted-foreground: 0 0% 90%;
+  --accent: 60 100% 50%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 0 100% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 100%;
+  --input: 0 0% 100%;
+  --ring: 60 100% 50%;
+}
+
+.high-contrast * {
+  border-color: #fff !important;
+  text-shadow: none !important;
+}
+
+.high-contrast .bg-primary,
+.high-contrast .bg-secondary,
+.high-contrast .bg-accent {
+  background-color: #ffff00 !important;
+  color: #000 !important;
+}
+
+.high-contrast .text-primary,
+.high-contrast .text-secondary,
+.high-contrast .text-muted-foreground {
+  color: #fff !important;
 }
