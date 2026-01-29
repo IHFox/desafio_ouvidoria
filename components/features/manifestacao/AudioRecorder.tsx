@@ -7,10 +7,11 @@ import { useMediaRecorder } from "@/lib/hooks/useMediaRecorder";
 
 interface AudioRecorderProps {
     onRecordingComplete: (blob: Blob | null) => void;
+    initialBlob?: Blob | null;
     id?: string;
 }
 
-export function AudioRecorder({ onRecordingComplete, id = "audio-recorder" }: AudioRecorderProps) {
+export function AudioRecorder({ onRecordingComplete, initialBlob = null, id = "audio-recorder" }: AudioRecorderProps) {
     const {
         isRecording,
         recordingBlob,
@@ -19,7 +20,7 @@ export function AudioRecorder({ onRecordingComplete, id = "audio-recorder" }: Au
         startRecording,
         stopRecording,
         clearRecording
-    } = useMediaRecorder('audio');
+    } = useMediaRecorder('audio', initialBlob);
 
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
@@ -29,11 +30,12 @@ export function AudioRecorder({ onRecordingComplete, id = "audio-recorder" }: Au
             setAudioUrl(url);
             onRecordingComplete(recordingBlob);
             return () => URL.revokeObjectURL(url);
-        } else {
+        } else if (!initialBlob) {
+            // Só limpa se não houver um blob inicial (ex: limpeza explícita)
             setAudioUrl(null);
             onRecordingComplete(null);
         }
-    }, [recordingBlob, onRecordingComplete]);
+    }, [recordingBlob, onRecordingComplete, initialBlob]);
 
     const formatTime = (seconds: number) => {
         const min = Math.floor(seconds / 60);

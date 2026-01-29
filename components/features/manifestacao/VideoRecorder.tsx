@@ -6,10 +6,11 @@ import { useMediaRecorder } from "@/lib/hooks/useMediaRecorder";
 
 interface VideoRecorderProps {
     onRecordingComplete: (blob: Blob | null) => void;
+    initialBlob?: Blob | null;
     id?: string;
 }
 
-export function VideoRecorder({ onRecordingComplete, id = "video-recorder" }: VideoRecorderProps) {
+export function VideoRecorder({ onRecordingComplete, initialBlob = null, id = "video-recorder" }: VideoRecorderProps) {
     const {
         isRecording,
         recordingBlob,
@@ -19,7 +20,7 @@ export function VideoRecorder({ onRecordingComplete, id = "video-recorder" }: Vi
         stopRecording,
         clearRecording,
         stream
-    } = useMediaRecorder('video');
+    } = useMediaRecorder('video', initialBlob);
 
     const videoRef = useRef<HTMLVideoElement>(null);
     const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -36,11 +37,11 @@ export function VideoRecorder({ onRecordingComplete, id = "video-recorder" }: Vi
             setVideoUrl(url);
             onRecordingComplete(recordingBlob);
             return () => URL.revokeObjectURL(url);
-        } else {
+        } else if (!initialBlob) {
             setVideoUrl(null);
             onRecordingComplete(null);
         }
-    }, [recordingBlob, onRecordingComplete]);
+    }, [recordingBlob, onRecordingComplete, initialBlob]);
 
     const formatTime = (seconds: number) => {
         const min = Math.floor(seconds / 60);

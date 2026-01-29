@@ -14,10 +14,10 @@ interface MediaRecorderHook {
     stream: MediaStream | null;
 }
 
-export function useMediaRecorder(type: 'audio' | 'video' = 'audio'): MediaRecorderHook {
+export function useMediaRecorder(type: 'audio' | 'video' = 'audio', initialBlob: Blob | null = null): MediaRecorderHook {
     const [isRecording, setIsRecording] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
-    const [recordingBlob, setRecordingBlob] = useState<Blob | null>(null);
+    const [recordingBlob, setRecordingBlob] = useState<Blob | null>(initialBlob);
     const [duration, setDuration] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [stream, setStream] = useState<MediaStream | null>(null);

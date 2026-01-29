@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -43,7 +43,8 @@ export function FormManifestacao() {
             arquivos: [],
             tipo: undefined,
         },
-        mode: 'onChange'
+        mode: 'onSubmit',
+        reValidateMode: 'onSubmit'
     });
 
     const { control, handleSubmit, watch, setValue, trigger, formState: { errors } } = form;
@@ -59,7 +60,8 @@ export function FormManifestacao() {
         }
         if (currentStep === 2) fieldsToValidate = ['descricao', 'audioBlob', 'videoBlob', 'arquivos'];
 
-        const isStepValid = await trigger(fieldsToValidate);
+        // Validar apenas os campos do passo atual
+        const isStepValid = await trigger(fieldsToValidate, { shouldFocus: true });
 
         // Validação customizada para passo 2 (conteúdo) para garantir que pelo menos um meio foi preenchido
         if (currentStep === 2) {
@@ -72,6 +74,11 @@ export function FormManifestacao() {
 
         if (isStepValid) {
             setCurrentStep(prev => Math.min(prev + 1, STEPS.length - 1));
+        } else {
+            // Focar no primeiro erro ou mostrar toast se for erro de lógica (refine)
+            if (errors.descricao && currentStep === 2) {
+                toast.error(errors.descricao.message as string);
+            }
         }
     };
 
@@ -79,7 +86,18 @@ export function FormManifestacao() {
         setCurrentStep(prev => Math.max(prev - 1, 0));
     };
 
+    const handleAudioComplete = useCallback((blob: Blob | null) => {
+        setValue('audioBlob', blob);
+    }, [setValue]);
+
+    const handleVideoComplete = useCallback((blob: Blob | null) => {
+        setValue('videoBlob', blob);
+    }, [setValue]);
+
     const onSubmit = async (data: any) => {
+        if (currentStep !== STEPS.length - 1) {
+            return;
+        }
         setIsSubmitting(true);
         try {
             // Simulação de delay de rede
@@ -126,7 +144,7 @@ export function FormManifestacao() {
             </div>
 
             <Card>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
                     <CardHeader>
                         <CardTitle>{STEPS[currentStep].title}</CardTitle>
                         <CardDescription>
@@ -176,7 +194,7 @@ export function FormManifestacao() {
                         {/* Passo 2: Identificação */}
                         {currentStep === 1 && (
                             <div className="space-y-6">
-                                <div className="flex items-center justify-between space-x-2 border p-4 rounded-lg">
+                                <div className="flex items-center justify-around space-x-2 border p-4 rounded-lg">
                                     <Label htmlFor="anonimo-mode" className="flex flex-col space-y-1">
                                         <span className="text-base font-semibold">Manifestação Anônima?</span>
                                         <span className="font-normal text-sm text-muted-foreground">
@@ -270,7 +288,8 @@ export function FormManifestacao() {
 
                                 <TabsContent value="audio">
                                     <AudioRecorder
-                                        onRecordingComplete={(blob) => setValue('audioBlob', blob)}
+                                        onRecordingComplete={handleAudioComplete}
+                                        initialBlob={formData.audioBlob}
                                     />
                                     {formData.audioBlob && (
                                         <div className="mt-2 text-sm text-green-600 font-medium flex items-center">
@@ -281,7 +300,8 @@ export function FormManifestacao() {
 
                                 <TabsContent value="video">
                                     <VideoRecorder
-                                        onRecordingComplete={(blob) => setValue('videoBlob', blob)}
+                                        onRecordingComplete={handleVideoComplete}
+                                        initialBlob={formData.videoBlob}
                                     />
                                     {formData.videoBlob && (
                                         <div className="mt-2 text-sm text-green-600 font-medium flex items-center">
@@ -377,7 +397,12 @@ export function FormManifestacao() {
                                 Próximo <ChevronRight className="ml-2 h-4 w-4" />
                             </Button>
                         ) : (
-                            <Button type="submit" disabled={isSubmitting} className="w-32 bg-secondary hover:bg-secondary/90">
+                            <Button
+                                type="button"
+                                disabled={isSubmitting}
+                                className="w-32 bg-secondary hover:bg-secondary/90"
+                                onClick={handleSubmit(onSubmit)}
+                            >
                                 {isSubmitting ? (
                                     <span className="animate-pulse">Enviando...</span>
                                 ) : (
