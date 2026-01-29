@@ -126,7 +126,7 @@ export function FormManifestacao() {
             </div>
 
             <Card>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <CardHeader>
                         <CardTitle>{STEPS[currentStep].title}</CardTitle>
                         <CardDescription>
