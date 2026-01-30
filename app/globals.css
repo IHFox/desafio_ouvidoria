@@ -139,41 +139,55 @@
 
 /* Alto Contraste */
 .high-contrast {
-  --background: 0 0% 0%;
-  --foreground: 0 0% 100%;
-  --card: 0 0% 0%;
-  --card-foreground: 0 0% 100%;
-  --popover: 0 0% 0%;
-  --popover-foreground: 0 0% 100%;
-  --primary: 60 100% 50%;
-  --primary-foreground: 0 0% 0%;
-  --secondary: 0 0% 100%;
-  --secondary-foreground: 0 0% 0%;
-  --muted: 0 0% 20%;
-  --muted-foreground: 0 0% 90%;
-  --accent: 60 100% 50%;
-  --accent-foreground: 0 0% 0%;
-  --destructive: 0 100% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 0 0% 100%;
-  --input: 0 0% 100%;
-  --ring: 60 100% 50%;
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+  --card: oklch(0 0 0);
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0 0 0);
+  --popover-foreground: oklch(1 0 0);
+  --primary: oklch(0.9 0.2 90);
+  /* Amarelo vibrante */
+  --primary-foreground: oklch(0 0 0);
+  --secondary: oklch(1 0 0);
+  --secondary-foreground: oklch(0 0 0);
+  --muted: oklch(0.2 0 0);
+  --muted-foreground: oklch(0.9 0 0);
+  --accent: oklch(0.9 0.2 90);
+  --accent-foreground: oklch(0 0 0);
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(1 0 0);
+  --input: oklch(1 0 0);
+  --ring: oklch(0.9 0.2 90);
 }
 
+/* Alto Contraste - Overrides para componentes que não usam variáveis */
 .high-contrast * {
-  border-color: #fff !important;
+  border-color: var(--border) !important;
   text-shadow: none !important;
+}
+
+/* Permitir que a cor primária seja usada para bordas de seleção */
+.high-contrast [data-state=checked],
+.high-contrast [aria-selected=true],
+.high-contrast [aria-checked=true],
+.high-contrast .peer[data-state=checked]~.peer-data-\[state\=checked\]\:border-primary,
+.high-contrast .peer:checked~.peer-checked\:border-primary {
+  border-color: var(--primary) !important;
 }
 
 .high-contrast .bg-primary,
 .high-contrast .bg-secondary,
 .high-contrast .bg-accent {
-  background-color: #ffff00 !important;
-  color: #000 !important;
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
 }
 
 .high-contrast .text-primary,
-.high-contrast .text-secondary,
+.high-contrast .text-secondary {
+  color: var(--primary) !important;
+}
+
 .high-contrast .text-muted-foreground {
-  color: #fff !important;
+  color: var(--muted-foreground) !important;
 }

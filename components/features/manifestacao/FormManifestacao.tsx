@@ -14,7 +14,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { toast } from "sonner";
 
 import { manifestacaoSchema, ManifestacaoFormData } from '@/lib/validations/manifestacao.schema';
 import { gerarProtocolo } from '@/lib/utils/protocolo-generator';
@@ -67,18 +66,13 @@ export function FormManifestacao() {
         if (currentStep === 2) {
             const hasContent = formData.descricao || formData.audioBlob || formData.videoBlob || (formData.arquivos && formData.arquivos.length > 0);
             if (!hasContent) {
-                toast.error("Por favor, forneça pelo menos uma forma de relato (Texto, Áudio, Vídeo ou Arquivo)");
+                form.setError('descricao', { message: "Por favor, forneça pelo menos uma forma de relato (Texto, Áudio, Vídeo ou Arquivo)" });
                 return;
             }
         }
 
         if (isStepValid) {
             setCurrentStep(prev => Math.min(prev + 1, STEPS.length - 1));
-        } else {
-            // Focar no primeiro erro ou mostrar toast se for erro de lógica (refine)
-            if (errors.descricao && currentStep === 2) {
-                toast.error(errors.descricao.message as string);
-            }
         }
     };
 
@@ -119,12 +113,10 @@ export function FormManifestacao() {
             const saved = JSON.parse(localStorage.getItem('manifestacoes') || '[]');
             localStorage.setItem('manifestacoes', JSON.stringify([manifestacao, ...saved]));
 
-            toast.success("Manifestação enviada com sucesso!");
             router.push(`/manifestacao/sucesso?protocolo=${protocolo}`);
 
         } catch (error) {
             console.error(error);
-            toast.error("Erro ao enviar manifestação. Tente novamente.");
         } finally {
             setIsSubmitting(false);
         }
@@ -163,30 +155,38 @@ export function FormManifestacao() {
                                 name="tipo"
                                 control={control}
                                 render={({ field }) => (
-                                    <RadioGroup
-                                        onValueChange={field.onChange}
-                                        value={field.value}
-                                        className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                                    >
-                                        {[
-                                            { value: 'reclamacao', label: 'Reclamação', desc: 'Relatar insatisfação com serviço público' },
-                                            { value: 'denuncia', label: 'Denúncia', desc: 'Comunicar irregularidade ou ilícito' },
-                                            { value: 'sugestao', label: 'Sugestão', desc: 'Propor melhorias nos serviços' },
-                                            { value: 'elogio', label: 'Elogio', desc: 'Demonstrar satisfação com o atendimento' },
-                                            { value: 'solicitacao', label: 'Solicitação', desc: 'Requerer acesso a serviço ou providência' },
-                                        ].map((item) => (
-                                            <div key={item.value}>
-                                                <RadioGroupItem value={item.value} id={item.value} className="peer sr-only" />
-                                                <Label
-                                                    htmlFor={item.value}
-                                                    className="flex flex-col h-full items-start justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all"
-                                                >
-                                                    <span className="font-semibold text-lg mb-1">{item.label}</span>
-                                                    <span className="font-normal text-muted-foreground">{item.desc}</span>
-                                                </Label>
-                                            </div>
-                                        ))}
-                                    </RadioGroup>
+                                    <div className="space-y-4">
+                                        <RadioGroup
+                                            onValueChange={field.onChange}
+                                            value={field.value}
+                                            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                                        >
+                                            {[
+                                                { value: 'reclamacao', label: 'Reclamação', desc: 'Relatar insatisfação com serviço público' },
+                                                { value: 'denuncia', label: 'Denúncia', desc: 'Comunicar irregularidade ou ilícito' },
+                                                { value: 'sugestao', label: 'Sugestão', desc: 'Propor melhorias nos serviços' },
+                                                { value: 'elogio', label: 'Elogio', desc: 'Demonstrar satisfação com o atendimento' },
+                                                { value: 'solicitacao', label: 'Solicitação', desc: 'Requerer acesso a serviço ou providência' },
+                                            ].map((item) => (
+                                                <div key={item.value}>
+                                                    <RadioGroupItem value={item.value} id={item.value} className="peer sr-only" />
+                                                    <Label
+                                                        htmlFor={item.value}
+                                                        className={`flex flex-col h-full items-start justify-between rounded-md border-2 p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all ${errors.tipo ? "border-destructive" : "border-muted"
+                                                            } peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary`}
+                                                    >
+                                                        <span className="font-semibold text-lg mb-1">{item.label}</span>
+                                                        <span className="font-normal text-muted-foreground">{item.desc}</span>
+                                                    </Label>
+                                                </div>
+                                            ))}
+                                        </RadioGroup>
+                                        {errors.tipo && (
+                                            <p className="text-destructive text-sm font-medium animate-in fade-in slide-in-from-top-1">
+                                                Por favor, selecione o tipo da sua manifestação
+                                            </p>
+                                        )}
+                                    </div>
                                 )}
                             />
                         )}
@@ -217,22 +217,24 @@ export function FormManifestacao() {
                                 {!formData.anonimo && (
                                     <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
                                         <div className="grid gap-2">
-                                            <Label htmlFor="nome">Nome Completo <span className="text-destructive">*</span></Label>
+                                            <Label htmlFor="nome" className={errors.nome ? "text-destructive" : ""}>Nome Completo <span className="text-destructive">*</span></Label>
                                             <Input
                                                 id="nome"
                                                 {...form.register("nome")}
                                                 aria-invalid={!!errors.nome}
+                                                className={errors.nome ? "border-destructive focus-visible:ring-destructive" : ""}
                                             />
                                             {errors.nome && <p className="text-destructive text-sm" role="alert">{errors.nome.message}</p>}
                                         </div>
 
                                         <div className="grid gap-2">
-                                            <Label htmlFor="email">E-mail <span className="text-destructive">*</span></Label>
+                                            <Label htmlFor="email" className={errors.email ? "text-destructive" : ""}>E-mail <span className="text-destructive">*</span></Label>
                                             <Input
                                                 id="email"
                                                 type="email"
                                                 {...form.register("email")}
                                                 aria-invalid={!!errors.email}
+                                                className={errors.email ? "border-destructive focus-visible:ring-destructive" : ""}
                                             />
                                             {errors.email && <p className="text-destructive text-sm" role="alert">{errors.email.message}</p>}
                                         </div>
@@ -272,18 +274,20 @@ export function FormManifestacao() {
                                 </TabsList>
 
                                 <TabsContent value="texto" className="space-y-4">
-                                    <Controller
-                                        name="descricao"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <TextInput
-                                                id="manifestacao-texto"
-                                                value={field.value || ''}
-                                                onChange={field.onChange}
-                                                error={errors.descricao?.message}
-                                            />
-                                        )}
-                                    />
+                                    <div className="space-y-2">
+                                        <Controller
+                                            name="descricao"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <TextInput
+                                                    id="manifestacao-texto"
+                                                    value={field.value || ''}
+                                                    onChange={field.onChange}
+                                                    error={errors.descricao?.message}
+                                                />
+                                            )}
+                                        />
+                                    </div>
                                 </TabsContent>
 
                                 <TabsContent value="audio">

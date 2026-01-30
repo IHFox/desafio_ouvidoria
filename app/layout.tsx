@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ScreenReaderAnnouncer } from "@/components/features/accessibility/ScreenReaderAnnouncer";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipToContent } from "@/components/features/accessibility/SkipToContent";
@@ -42,6 +43,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-background text-foreground`}
       >
         <SkipToContent />
+        <ScreenReaderAnnouncer message="" />
         <Header />
 
         <main id="main-content" className="flex-1 container mx-auto px-4 py-8 md:px-6">

@@ -35,12 +35,20 @@ export const manifestacaoSchema = z.object({
     path: ["descricao"] // Aponta o erro para descrição para facilitar, ou criar um erro geral
 }).refine((data) => {
     if (!data.anonimo) {
-        return !!data.nome && !!data.email;
+        return !!data.nome && data.nome.length > 0;
     }
     return true;
 }, {
-    message: "Nome e Email são obrigatórios para manifestações identificadas",
-    path: ["nome"] // Erro no nome
+    message: "O nome é obrigatório para manifestações identificadas",
+    path: ["nome"]
+}).refine((data) => {
+    if (!data.anonimo) {
+        return !!data.email && data.email.length > 0;
+    }
+    return true;
+}, {
+    message: "O e-mail é obrigatório para manifestações identificadas",
+    path: ["email"]
 });
 
 export type ManifestacaoFormData = z.infer<typeof manifestacaoSchema>;
