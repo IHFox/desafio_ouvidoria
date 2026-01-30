@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload, X, File as FileIcon, Image as ImageIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -23,21 +23,29 @@ export function FileUploader({
     id = "file-upload"
 }: FileUploaderProps) {
     const [files, setFiles] = useState<File[]>([]);
+    const onFilesChangeRef = useRef(onFilesChange);
+    const isFirstRender = useRef(true);
+
+    // Keep the ref updated with the latest callback
+    useEffect(() => {
+        onFilesChangeRef.current = onFilesChange;
+    });
+
+    // Notify parent when files change - skip initial render to avoid unnecessary calls
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+        onFilesChangeRef.current(files);
+    }, [files]);
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
-        setFiles(prev => {
-            const newFiles = [...prev, ...acceptedFiles].slice(0, maxFiles);
-            onFilesChange(newFiles);
-            return newFiles;
-        });
-    }, [maxFiles, onFilesChange]);
+        setFiles(prev => [...prev, ...acceptedFiles].slice(0, maxFiles));
+    }, [maxFiles]);
 
     const removeFile = (index: number) => {
-        setFiles(prev => {
-            const newFiles = prev.filter((_, i) => i !== index);
-            onFilesChange(newFiles);
-            return newFiles;
-        });
+        setFiles(prev => prev.filter((_, i) => i !== index));
     };
 
     const { getRootProps, getInputProps, isDragActive, fileRejections } = useDropzone({

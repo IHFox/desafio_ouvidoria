@@ -23,25 +23,26 @@ export function useMediaRecorder(type: 'audio' | 'video' = 'audio', initialBlob:
     const [stream, setStream] = useState<MediaStream | null>(null);
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
     const chunksRef = useRef<Blob[]>([]);
 
-    const startTimer = () => {
-        timerRef.current = setInterval(() => {
-            setDuration(prev => prev + 1);
-        }, 1000);
-    };
-
-    const stopTimer = () => {
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
+    // Timer Effect: Handles the duration state update independently
+    useEffect(() => {
+        let interval: any;
+        if (isRecording && !isPaused) {
+            interval = setInterval(() => {
+                setDuration(prev => prev + 1);
+            }, 1000);
         }
-    };
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [isRecording, isPaused]);
 
     const startRecording = useCallback(async (config?: MediaStreamConstraints) => {
         try {
             setError(null);
+            setDuration(0);
+            chunksRef.current = [];
 
             const constraints: MediaStreamConstraints = config || {
                 audio: true,
@@ -51,70 +52,63 @@ export function useMediaRecorder(type: 'audio' | 'video' = 'audio', initialBlob:
             const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
             setStream(mediaStream);
 
-            const mimeType = type === 'video' ? 'video/webm;codecs=vp8' : 'audio/webm';
+            // Select MIME type based on type and browser support
+            const mimeType = type === 'video'
+                ? (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus') ? 'video/webm;codecs=vp8,opus' : 'video/webm')
+                : (MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm');
 
-            // Fallback for Safari which might not support webm
-            let options: MediaRecorderOptions = {};
-            if (MediaRecorder.isTypeSupported(mimeType)) {
-                options = { mimeType };
-            }
-
-            const recorder = new MediaRecorder(mediaStream, options);
+            const recorder = new MediaRecorder(mediaStream, { mimeType });
 
             recorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
+                if (event.data && event.data.size > 0) {
                     chunksRef.current.push(event.data);
                 }
             };
 
             recorder.onstop = () => {
-                const blob = new Blob(chunksRef.current, {
-                    type: chunksRef.current[0]?.type || (type === 'video' ? 'video/webm' : 'audio/webm')
-                });
-                setRecordingBlob(blob);
+                if (chunksRef.current.length > 0) {
+                    const blob = new Blob(chunksRef.current, { type: chunksRef.current[0].type });
+                    setRecordingBlob(blob);
+                }
                 chunksRef.current = [];
-                stopTimer();
-
-                // Stop all tracks
-                mediaStream.getTracks().forEach(track => track.stop());
-                setStream(null);
             };
 
             mediaRecorderRef.current = recorder;
-            recorder.start();
+            recorder.start(1000); // 1s chunks
             setIsRecording(true);
-            startTimer();
-
+            setIsPaused(false);
         } catch (err) {
-            console.error("Erro ao iniciar gravação:", err);
-            setError("Não foi possível acessar o dispositivo de gravação.");
+            console.error("Recording error:", err);
+            setError("Não foi possível acessar mídia. Verifique as permissões.");
             setIsRecording(false);
         }
     }, [type]);
 
     const stopRecording = useCallback(() => {
-        if (mediaRecorderRef.current && isRecording) {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
             mediaRecorderRef.current.stop();
-            setIsRecording(false);
-            setIsPaused(false);
         }
-    }, [isRecording]);
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            setStream(null);
+        }
+        setIsRecording(false);
+        setIsPaused(false);
+    }, [stream]);
 
     const pauseRecording = useCallback(() => {
-        if (mediaRecorderRef.current && isRecording && !isPaused) {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
             mediaRecorderRef.current.pause();
             setIsPaused(true);
-            stopTimer();
         }
-    }, [isRecording, isPaused]);
+    }, []);
 
     const resumeRecording = useCallback(() => {
-        if (mediaRecorderRef.current && isRecording && isPaused) {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'paused') {
             mediaRecorderRef.current.resume();
             setIsPaused(false);
-            startTimer();
         }
-    }, [isRecording, isPaused]);
+    }, []);
 
     const clearRecording = useCallback(() => {
         setRecordingBlob(null);
@@ -126,10 +120,9 @@ export function useMediaRecorder(type: 'audio' | 'video' = 'audio', initialBlob:
         }
     }, [stream]);
 
-    // Cleanup on unmount
+    // Final cleanup to ensure no camera is left on
     useEffect(() => {
         return () => {
-            stopTimer();
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
             }
@@ -150,3 +143,4 @@ export function useMediaRecorder(type: 'audio' | 'video' = 'audio', initialBlob:
         stream
     };
 }
+
