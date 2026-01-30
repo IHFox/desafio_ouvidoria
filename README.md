@@ -29,23 +29,29 @@ Progressive Web App (PWA) desenvolvido para permitir que cidadãos registrem man
 
 ---
 
-### Como Rodar o Projeto
+## Instalação
+
+### 1. Clonar ou Baixar o Projeto
+```bash
+git clone https://github.com/IHFox/desafio_ouvidoria.git
+cd desafio_ouvidoria
+```
 
 > [!NOTE]
 > O projeto utiliza Next.js 16, que habilita o Turbopack por padrão. Devido ao uso do `next-pwa`, os comandos `dev` e `build` foram configurados para usar `--webpack` explicitamente para garantir compatibilidade.
 
-1.  **Instalar dependências**:
+### 2. Instalar dependências
     ```bash
     npm install
     ```
 
-2.  **Rodar servidor de desenvolvimento**:
+### 3. Rodar servidor de desenvolvimento
     ```bash
     npm run dev
     ```
     Acesse http://localhost:3000
 
-3.  **Build de Produção**:
+### 4. Build de Produção
     ```bash
     npm run build
     npm start
