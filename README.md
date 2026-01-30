@@ -1,9 +1,15 @@
-# Participa DF - Ouvidoria PWA 📱
+# Solução de desenvolvimento de PWA para Ouvidoria - Hackathon Participa DF
 
-Progressive Web App (PWA) desenvolvido para o Hackathon Global 2025 - Desafio Ouvidoria GDF.
-O aplicativo permite que cidadãos registrem manifestações (denúncias, reclamações, sugestões, elogios) utilizando múltiplos canais (texto, áudio, vídeo, imagens) de forma acessível e intuitiva.
+**Categoria:** Ouvidoria
+**Data:** Janeiro 2026
 
-## 🚀 Funcionalidades Principais
+## Resumo da Solução
+
+Progressive Web App (PWA) desenvolvido para permitir que cidadãos registrem manifestações (denúncias, reclamações, sugestões, elogios) utilizando múltiplos canais (texto, áudio, vídeo, imagens) de forma acessível e intuitiva.
+
+---
+
+## Funcionalidades Principais
 
 - **Multicanalidade**: Relato por texto, gravação de áudio, vídeo ou upload de arquivos.
 - **Acessibilidade (WCAG 2.1 AA)**: Navegação por teclado, leitores de tela, alto contraste, skip links.
@@ -11,7 +17,9 @@ O aplicativo permite que cidadãos registrem manifestações (denúncias, reclam
 - **Anonimato**: Opção de manifestação anônima ou identificada.
 - **Segurança**: Geração de protocolo único para acompanhamento.
 
-## 🛠️ Tecnologias Utilizadas
+---
+
+## Tecnologias Utilizadas
 
 - **Core**: Next.js 15+ (App Router), React, TypeScript.
 - **UI/UX**: Tailwind CSS, Shadcn/UI, Lucide Icons.
@@ -19,7 +27,9 @@ O aplicativo permite que cidadãos registrem manifestações (denúncias, reclam
 - **PWA**: next-pwa.
 - **Mídia**: Hooks customizados para MediaRecorder API.
 
-### 📦 Como Rodar o Projeto
+---
+
+### Como Rodar o Projeto
 
 > [!NOTE]
 > O projeto utiliza Next.js 16, que habilita o Turbopack por padrão. Devido ao uso do `next-pwa`, os comandos `dev` e `build` foram configurados para usar `--webpack` explicitamente para garantir compatibilidade.
@@ -41,7 +51,9 @@ O aplicativo permite que cidadãos registrem manifestações (denúncias, reclam
     npm start
     ```
 
-## 📱 Como Testar o PWA
+---
+
+## Como Testar o PWA
 
 O PWA está desabilitado no modo de desenvolvimento por padrão para evitar problemas de cache durante o desenvolvimento.
 
@@ -64,10 +76,19 @@ PWA_ENABLE_DEV=true npm run dev
 3.  **Service Worker**: No DevTools -> Application -> Service Workers e verifique se há um worker ativo de `sw.js`.
 4.  **Offline**: Marque a opção "Offline" na aba Network e recarregue. A aplicação deve carregar o esqueleto básico.
 
-O projeto segue as diretrizes WCAG 2.1 AA.
-- Use `Tab` para navegar entre elementos focáveis.
-- Use `Space`/`Enter` para interagir com botões.
-- Use leitores de tela (NVDA, VoiceOver) para verificar as descrições ARIA.
+---
+
+## Considerações
+
+- Apesar de no edital mencionar integração com o sistema de inteligência artificial IZA da Ouvidoria-Geral do DF, não foi possível realizar a integração devido à falta de documentação e acesso à API.
+- Por não ter definição de como armazenar os protocolos de atendimento, foi criado um sistema de armazenamento local utilizando o IndexedDB. Dessa forma, não estão sendo armazenados as gravações de áudio e vídeo, nem os anexos.
 
 ---
-**Equipe Antigravity** - Hackathon Participa DF 2025
+
+## Uso de Inteligência Artificial
+
+Para a resolução desse desafio, foram utilizados os seguintes modelos de IA por meio do Antigravity:
+
+- Claude Opus 4.5
+- Gemini 3 Pro
+- Gemini 3 Flash

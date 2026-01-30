@@ -7,15 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
-interface Manifestacao {
-    protocolo: string;
-    tipo: string;
-    dataHora: string;
-    descricao: string;
-    anonimo: boolean;
-    nome?: string;
-}
+import { Manifestacao, ProtocolPhase } from '@/lib/types/manifestacao.types';
 
 export default function AcompanharPage() {
     const [protocoloBusca, setProtocoloBusca] = useState('');
@@ -101,7 +95,8 @@ export default function AcompanharPage() {
                                 </CardDescription>
                             </div>
                             <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-200 py-1 px-3 text-sm">
-                                <CheckCircle2 className="h-4 w-4 mr-2" /> Recebido
+                                <CheckCircle2 className="h-4 w-4 mr-2" />
+                                {resultado.phases?.filter(p => p.active).pop()?.name || "Recebido"}
                             </Badge>
                         </CardHeader>
                         <CardContent className="pt-6 space-y-6">
@@ -119,21 +114,30 @@ export default function AcompanharPage() {
                                 <div className="space-y-4">
                                     <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Timeline de Andamento</h4>
                                     <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-muted">
-                                        <div className="relative">
-                                            <div className="absolute -left-[22px] top-1 h-3 w-3 rounded-full bg-primary border-2 border-background shadow-sm" />
-                                            <div>
-                                                <p className="text-sm font-bold">Manifestação Recebida</p>
-                                                <p className="text-xs text-muted-foreground">{formatDate(resultado.dataHora)}</p>
-                                                <p className="text-xs mt-1 text-muted-foreground">Sua manifestação foi registrada e será encaminhada para análise da área técnica competente.</p>
+                                        {resultado.phases?.map((phase, index) => (
+                                            <div key={phase.id} className={cn("relative transition-opacity", !phase.active && "opacity-50")}>
+                                                <div className={cn(
+                                                    "absolute -left-[22px] top-1 h-3 w-3 rounded-full border-2 border-background shadow-sm",
+                                                    phase.active ? "bg-primary" : "bg-muted"
+                                                )} />
+                                                <div>
+                                                    <p className="text-sm font-bold">{phase.name}</p>
+                                                    {phase.timestamp && (
+                                                        <p className="text-xs text-muted-foreground">{formatDate(phase.timestamp)}</p>
+                                                    )}
+                                                    <p className="text-xs mt-1 text-muted-foreground">{phase.description}</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="relative opacity-50">
-                                            <div className="absolute -left-[22px] top-1 h-3 w-3 rounded-full bg-muted border-2 border-background shadow-sm" />
-                                            <div>
-                                                <p className="text-sm font-bold">Em Análise</p>
-                                                <p className="text-xs">Aguardando processamento</p>
-                                            </div>
-                                        </div>
+                                        )) || (
+                                                <div className="relative">
+                                                    <div className="absolute -left-[22px] top-1 h-3 w-3 rounded-full bg-primary border-2 border-background shadow-sm" />
+                                                    <div>
+                                                        <p className="text-sm font-bold">Manifestação Recebida</p>
+                                                        <p className="text-xs text-muted-foreground">{formatDate(resultado.dataHora)}</p>
+                                                        <p className="text-xs mt-1 text-muted-foreground">Sua manifestação foi registrada e será encaminhada para análise da área técnica competente.</p>
+                                                    </div>
+                                                </div>
+                                            )}
                                     </div>
                                 </div>
                             </div>

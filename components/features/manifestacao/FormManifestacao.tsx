@@ -17,6 +17,7 @@ import { Progress } from "@/components/ui/progress";
 
 import { manifestacaoSchema, ManifestacaoFormData } from '@/lib/validations/manifestacao.schema';
 import { gerarProtocolo } from '@/lib/utils/protocolo-generator';
+import { DEFAULT_PHASES, Manifestacao } from '@/lib/types/manifestacao.types';
 import { TextInput } from './TextInput';
 import { AudioRecorder } from './AudioRecorder';
 import { VideoRecorder } from './VideoRecorder';
@@ -97,13 +98,21 @@ export function FormManifestacao() {
             // Simulação de delay de rede
             await new Promise(resolve => setTimeout(resolve, 2000));
 
+            const now = new Date().toISOString();
             const protocolo = gerarProtocolo();
 
+            // Inicializar as fases com a primeira ativa e carimbada
+            const phases = DEFAULT_PHASES.map(p => ({
+                ...p,
+                timestamp: p.id === 'recebida' ? now : undefined
+            }));
+
             // Salvar no localStorage para simulação de persistência
-            const manifestacao = {
+            const manifestacao: Manifestacao = {
                 ...data,
                 protocolo,
-                dataHora: new Date().toISOString(),
+                dataHora: now,
+                phases,
                 // Blobs não são serializáveis no localStorage, em app real enviaria para API
                 audioBlob: data.audioBlob ? 'Audio gravado' : null,
                 videoBlob: data.videoBlob ? 'Vídeo gravado' : null,
