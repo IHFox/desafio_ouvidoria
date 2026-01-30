@@ -4,14 +4,14 @@ export function Footer() {
             <div className="container px-4 md:px-6">
                 <div className="grid gap-8 md:grid-cols-3">
                     <div className="space-y-4">
-                        <h3 className="font-bold text-lg">Participa DF</h3>
+                        <span className="font-bold text-lg">Participa DF</span>
                         <p className="text-sm text-muted-foreground">
                             Ouvidoria-Geral do Distrito Federal.
                             Exerça sua cidadania.
                         </p>
                     </div>
                     <div className="space-y-4">
-                        <h3 className="font-bold text-sm">Canais de Atendimento</h3>
+                        <span className="font-bold text-lg">Canais de Atendimento</span>
                         <ul className="space-y-2 text-sm text-muted-foreground">
                             <li>Telefone: 162</li>
                             <li>Presencial: Nos órgãos do GDF</li>
@@ -19,7 +19,7 @@ export function Footer() {
                         </ul>
                     </div>
                     <div className="space-y-4">
-                        <h3 className="font-bold text-sm">Sobre o Sistema</h3>
+                        <span className="font-bold text-lg">Sobre o Sistema</span>
                         <p className="text-sm text-muted-foreground">
                             Desenvolvido para o 1º Hackathon em Controle Social.
                             Versão PWA v1.0.0

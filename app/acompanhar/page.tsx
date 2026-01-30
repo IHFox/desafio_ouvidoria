@@ -60,7 +60,7 @@ export default function AcompanharPage() {
                 <p className="text-muted-foreground">Consulte o status e o andamento da sua solicitação pelo número do protocolo.</p>
             </div>
 
-            <Card className="border-1 border-primary/10 shadow-lg overflow-hidden">
+            <Card className="border-1 border-primary/10 shadow-md overflow-hidden">
                 <CardHeader className="bg-primary/5 border-b p-4">
                     <CardTitle className="text-lg">Buscar Protocolo</CardTitle>
                     <CardDescription>Insira o código recebido ao final do seu envio (ex: 20261234-AAAA)</CardDescription>

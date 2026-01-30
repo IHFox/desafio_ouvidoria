@@ -56,15 +56,15 @@
   --popover-foreground: oklch(0.145 0 0);
 
   /* Azul GDF */
-  --primary: #0066cc;
+  --primary: oklch(0.45 0.18 255);
   --primary-foreground: #ffffff;
 
   /* Verde GDF */
-  --secondary: #00a859;
+  --secondary: oklch(0.45 0.16 153);
   --secondary-foreground: #ffffff;
 
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: oklch(0.45 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);

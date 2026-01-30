@@ -132,7 +132,7 @@ export default function AjudaPage() {
     ];
 
     return (
-        <div className="max-w-4xl mx-auto space-y-12 animate-in fade-in duration-500 pb-20">
+        <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-500 pb-20">
             {/* Header */}
             <div className="text-center space-y-4">
                 <h1 className="text-4xl font-extrabold tracking-tight">Como podemos ajudar?</h1>
@@ -142,14 +142,7 @@ export default function AjudaPage() {
             </div>
 
             {/* O que é a Ouvidoria? */}
-            {/* <Card className="border-1 border-primary/10 shadow-xl bg-gradient-to-br from-card to-muted/30 overflow-hidden">
-                <CardHeader className="border-b bg-primary/5 pb-6">
-                    <CardTitle className="text-2xl flex items-center gap-3">
-                        <Info className="h-6 w-6 text-primary" />
-                        O que é a Ouvidoria do DF?
-                    </CardTitle>
-                </CardHeader> */}
-            <Card className="border-1 border-primary/10 shadow-lg overflow-hidden">
+            <Card className="border-1 border-primary/10 shadow-md overflow-hidden">
                 <CardHeader className="bg-primary/5 p-4">
                     <CardTitle className="text-lg flex items-center gap-3">
                         <Info className="h-6 w-6 text-primary" />
@@ -176,21 +169,21 @@ export default function AjudaPage() {
                             <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
                                 <Globe className="h-5 w-5" />
                             </div>
-                            <h3 className="font-bold text-primary">Participa DF</h3>
+                            <h2 className="font-bold text-primary">Participa DF</h2>
                             <p className="text-xs text-muted-foreground">Sistema web acessível 24h para registros e acompanhamento.</p>
                         </div>
                         <div className="space-y-3 p-4 bg-background rounded-xl border border-secondary/10 shadow-sm">
                             <div className="h-10 w-10 bg-secondary/10 rounded-lg flex items-center justify-center text-secondary">
                                 <Phone className="h-5 w-5" />
                             </div>
-                            <h3 className="font-bold text-secondary">Central 162</h3>
+                            <h2 className="font-bold text-secondary">Central 162</h2>
                             <p className="text-xs text-muted-foreground">Atendimento telefônico diário com horários ampliados.</p>
                         </div>
                         <div className="space-y-3 p-4 bg-background rounded-xl border border-primary/10 shadow-sm">
                             <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
                                 <MapPin className="h-5 w-5" />
                             </div>
-                            <h3 className="font-bold text-primary">Presencial</h3>
+                            <h2 className="font-bold text-primary">Presencial</h2>
                             <p className="text-xs text-muted-foreground">Atendimento físico em diversos órgãos do Governo do DF.</p>
                         </div>
                     </div>
@@ -208,7 +201,7 @@ export default function AjudaPage() {
             <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-8">
                     <QuestionIcon className="h-7 w-7 text-primary" />
-                    <h2 className="text-3xl font-bold">Perguntas Frequentes</h2>
+                    <h2 className="text-2xl font-bold">Perguntas Frequentes</h2>
                 </div>
 
                 <Accordion type="single" collapsible className="space-y-4">
@@ -232,7 +225,7 @@ export default function AjudaPage() {
             {/* Still have questions? */}
             <Card className="bg-primary text-primary-foreground border-none">
                 <CardContent className="p-8 text-center space-y-4">
-                    <h3 className="text-2xl font-bold">Ainda tem dúvidas?</h3>
+                    <h2 className="text-2xl font-bold">Ainda tem dúvidas?</h2>
                     <p className="opacity-90 max-w-xl mx-auto">
                         Se não encontrou o que procurava, nossa equipe está pronta para ajudar através dos canais oficiais.
                     </p>

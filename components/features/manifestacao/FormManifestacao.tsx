@@ -140,7 +140,7 @@ export function FormManifestacao() {
                     <span>Passo {currentStep + 1} de {STEPS.length}</span>
                     <span>{STEPS[currentStep].title}</span>
                 </div>
-                <Progress value={progress} className="h-2" />
+                <Progress value={progress} className="h-2" aria-label="Progresso" />
             </div>
 
             <Card>

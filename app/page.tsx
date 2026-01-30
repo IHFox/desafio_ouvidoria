@@ -34,21 +34,21 @@ export default function Home() {
           <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 text-primary">
             <Smartphone className="h-6 w-6" />
           </div>
-          <h3 className="text-xl font-bold mb-2">Multicanalidade</h3>
+          <h2 className="text-xl font-bold mb-2">Multicanalidade</h2>
           <p className="text-muted-foreground">Registre via texto, áudio, vídeo ou imagens. Você escolhe como quer se expressar.</p>
         </div>
         <div className="bg-card p-6 rounded-xl border shadow-sm hover:shadow-md transition-shadow">
           <div className="h-12 w-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-4 text-secondary">
             <Globe className="h-6 w-6" />
           </div>
-          <h3 className="text-xl font-bold mb-2">Acessibilidade Total</h3>
+          <h2 className="text-xl font-bold mb-2">Acessibilidade Total</h2>
           <p className="text-muted-foreground">Plataforma desenvolvida seguindo diretrizes WCAG 2.1 AA para inclusão de todos.</p>
         </div>
         <div className="bg-card p-6 rounded-xl border shadow-sm hover:shadow-md transition-shadow">
           <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 text-primary">
             <Shield className="h-6 w-6" />
           </div>
-          <h3 className="text-xl font-bold mb-2">Segurança e Anonimato</h3>
+          <h2 className="text-xl font-bold mb-2">Segurança e Anonimato</h2>
           <p className="text-muted-foreground">Opção de manifestação anônima e proteção de seus dados pessoais.</p>
         </div>
       </section>
