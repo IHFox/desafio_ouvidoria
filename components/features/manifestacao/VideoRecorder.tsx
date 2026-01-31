@@ -37,11 +37,11 @@ export function VideoRecorder({ onRecordingComplete, initialBlob = null, id = "v
             setVideoUrl(url);
             onRecordingComplete(recordingBlob);
             return () => URL.revokeObjectURL(url);
-        } else if (!initialBlob) {
+        } else {
             setVideoUrl(null);
             onRecordingComplete(null);
         }
-    }, [recordingBlob, onRecordingComplete, initialBlob]);
+    }, [recordingBlob, onRecordingComplete]);
 
     const formatTime = (seconds: number) => {
         const min = Math.floor(seconds / 60);

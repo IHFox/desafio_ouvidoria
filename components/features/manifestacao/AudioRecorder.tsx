@@ -30,12 +30,11 @@ export function AudioRecorder({ onRecordingComplete, initialBlob = null, id = "a
             setAudioUrl(url);
             onRecordingComplete(recordingBlob);
             return () => URL.revokeObjectURL(url);
-        } else if (!initialBlob) {
-            // Só limpa se não houver um blob inicial (ex: limpeza explícita)
+        } else {
             setAudioUrl(null);
             onRecordingComplete(null);
         }
-    }, [recordingBlob, onRecordingComplete, initialBlob]);
+    }, [recordingBlob, onRecordingComplete]);
 
     const formatTime = (seconds: number) => {
         const min = Math.floor(seconds / 60);
